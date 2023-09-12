@@ -100,7 +100,7 @@ PixelGray** readPGM(const char* filename, int* width, int* height) {
 
 
 
-    //copy into 2d array
+    //copy into 2d array (test)
 
 
 
