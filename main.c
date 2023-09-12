@@ -32,9 +32,9 @@ int main() {
 
 
     // Create a new 2D array 'image_thresh' to store the threshold image
-    //PixelGray** image_thresh = threshold(image_original, &width, &height);
+    PixelGray** image_thresh = threshold(image_original, &width, &height);
     //write the image data as "threshold.pgm"
-   writePGM("image_original.pgm", image_original, &width, &height);
+    writePGM("threshold.pgm", image_original, &width, &height);
 
     // Create a new 2D array 'image_rotate' to store the rotated image
    // PixelGray** image_rotate = rotate(image_original, &width, &height);
@@ -46,14 +46,14 @@ int main() {
   //  writePGM("rotate_again.pgm", image_rotate, &width, &height);
 
     // Free the allocated memory when you're done
-   /* for (int i = 0; i < height; ++i) {
+    for (int i = 0; i < height; ++i) {
         free(image_original[i]);
-        free(image_thresh[i]);
-        free(image_rotate[i]);
+        //free(image_thresh[i]);
+        //free(image_rotate[i]);
     }
     free(image_original);
-    free(image_thresh);
-    free(image_rotate); */
+    //free(image_thresh);
+    //free(image_rotate);
     return 0;
 }
 
@@ -65,8 +65,8 @@ PixelGray** readPGM(const char* filename, int* width, int* height) {
     *width =0;
     *height = 0;
     //open file
-    image_in = fopen(filename, "r");
-    // decalre struct pixelgray
+    image_in = fopen(filename, "rb");
+
 
     //declare 2d array
     unsigned char **matrix;
@@ -85,47 +85,60 @@ PixelGray** readPGM(const char* filename, int* width, int* height) {
 
     // allocated 2d array
 
-    matrix = (unsigned char **)malloc(*width *sizeof (unsigned char*));
-
-    for (int i =0; i < *width; i++)
-    {
-        matrix[i] = (unsigned char*)malloc (*height * sizeof(unsigned char));
-        if(matrix[i]==NULL)
-        {
-            printf("Error: Unable to allocate memory for columns in row %d\n",i);
-            exit(1);
-        }
-        size_t element_read = fread(matrix[i],sizeof (unsigned char),*height,image_in);
-    }
-
 
 
     //copy into 2d array (test)
-
+    for (int i = 0; i < *height; i++) {
+        if (fread(matrix[i], sizeof(unsigned char), *width, image_in) != *width) {
+            fprintf(stderr, "Error reading row %d in %s\n", i, filename);
+            exit(1);
+        }
+    }
 
 
     fclose(image_in);
 
     return matrix;
 }
+PixelGray** threshold(PixelGray** matrix, int* width, int* height)
+{
+    unsigned char **threshold;
+    threshold = (unsigned char **)malloc(*width *sizeof (unsigned char*));
+
+    for (int i =0; i < *width; i++)
+    {
+        threshold[i] = (unsigned char*)malloc (*height * sizeof(unsigned char));
+        if(matrix[i]==NULL) {
+            printf("Error: Unable to allocate memory for columns in row %d\n", i);
+            exit(1);
+        }
+    }
+
+    for (int i = 0; i < *height; i++) {
+        if (,"%c",threshold[i])
+        {
+
+        }
+    }
+
+
+
+}
+
 
 void writePGM(const char* filename, PixelGray** matrix, int* width, int* height)
 {
     FILE* image_out;
     image_out = fopen(filename,"wb");
-
+    unsigned char temp;
     //Printing the first 3 headers
     fprintf(image_out, "P5\n");
     fprintf(image_out, "%d %d\n", *width, *height);
     fprintf(image_out, "255\n");
-    for (int i =0 ; i < *height;i ++)
-    {
-        for(int j =0 ; j < *width; j++)
-        {
-            unsigned char temp = matrix[i][j].value;
-            fprintf(image_out,"%c",temp);
-        }
-        fprintf(image_out,"\n");
+
+    for (int i = 0; i < *height; i++) {
+        fwrite(matrix[i], sizeof(unsigned char), *width, image_out);
     }
+
     fclose(image_out);
 }
