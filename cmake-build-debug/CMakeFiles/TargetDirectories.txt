@@ -1,3 +1,0 @@
-C:/Users/Dat Truong/CLionProjects/CS420/cmake-build-debug/CMakeFiles/untitled.dir
-C:/Users/Dat Truong/CLionProjects/CS420/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Dat Truong/CLionProjects/CS420/cmake-build-debug/CMakeFiles/rebuild_cache.dir
